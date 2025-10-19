@@ -1,0 +1,26 @@
+node_modules
+.env
+
+# Hardhat files
+/cache
+/artifacts
+
+# TypeChain files
+/typechain
+/typechain-types
+
+# solidity-coverage files
+/coverage
+/coverage.json
+
+# Hardhat Ignition default folder for deployments against a local node
+smart-contracts/ignition/deployments/chain-31337
+/edr-fork-cache
+../.idea
+package-lock.json
+
+/scripts/deploy.js
+/scripts/marketInfo.js
+/scripts/resolve.js
+
+
