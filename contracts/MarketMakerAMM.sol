@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 import "solady/src/utils/g/EnumerableSetLib.sol";
-import "hardhat/console.sol";
 
 contract MarketMakerAMM {
 
@@ -10,6 +9,7 @@ contract MarketMakerAMM {
     event MarketEnter(uint256 indexed MarketId, uint256 indexed RoundId, address indexed User, uint256 AmountIn, uint256 Side, uint256 AmountOut); //0xafdcf9101f4dab5c3b6e53a3ec30d3e897f17b974edceb117d3c12d2d83b0fd9
     event MarketExit(uint256 indexed MarketId, uint256 indexed RoundId, address indexed User, uint256 AmountInA, uint256 AmountInB, uint256 AmountOut); //0x4c686a53bc9329e91f0d0d94d821505fd2c0aef3c09a94ea360d98c0dfb9dee4
     event MarketRedeem(uint256 indexed MarketId, uint256 indexed RoundId, address indexed User, uint256 Result, uint256 AmountOut); //0x3f63856e2d8c431941e15ac15a28d4201c2838a61987308f61a9d5d01aac4839
+    event RoundResolvedBy(uint256 indexed RoundId, address indexed Resolver, uint256 Fees); //0xa4151f6c29291b1556b1872bc36e5304d55092b1703f6226eefdb53250765c71
 
     error NotAuthorised();
     error RoundExpired();
@@ -746,16 +746,16 @@ contract MarketMakerAMM {
             mstore(0x20, 16)
             let hash := keccak256(0, 0x40)
             let roundFees := sload(hash)
-
             sstore(universalRound.slot, add(uRound, 1))
             sstore(roundStart.slot, timestamp())
             if iszero(
-
-                    call(gas(), caller(), roundFees, 0, 0, 0, 0)
-                ) {
-                    mstore(0x00, 0x98f73609) //InvalidOutput()
-                    revert(0x1c, 0x04)
-                }
+                call(gas(), caller(), roundFees, 0, 0, 0, 0)
+            ) {
+                mstore(0x00, 0x98f73609) //InvalidOutput()
+                revert(0x1c, 0x04)
+            }
+            mstore(0x00, roundFees)
+            log3(0x00, 0x20, 0xa4151f6c29291b1556b1872bc36e5304d55092b1703f6226eefdb53250765c71, uRound, caller())
         }
     }
 

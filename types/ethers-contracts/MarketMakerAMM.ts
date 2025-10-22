@@ -35,7 +35,7 @@ export declare namespace MarketMakerAMM {
   export interface MarketMakerAMMInterface extends Interface {
     getFunction(nameOrSignature: "checkResolutionStatus" | "claimFees" | "currentAndFutureRoundInfo" | "currentRoundInfo" | "currentSingleMarketRoundInfo" | "delistMarket" | "enterMarket" | "exitMarket" | "fees" | "getAllAvailableMarkets" | "getAllMarkets" | "getAmountOut" | "getBothMarkets" | "inputMarketRoundHistory" | "inputRoundInfo" | "inputSingleMarketRoundInfo" | "marketToDelistingRound" | "putMarketOnDelist" | "redeemPendingRoundsPerMarketId" | "redeemRoundsPerMarketIdCapped" | "registerMarket" | "resolveMarkets" | "roundStart" | "universalRound" | "updateAdmin" | "userDataPerCurrentRoundId" | "userDataPerMarketAndCurrentRoundId" | "userDataPerMarketIdAndRoundId" | "userDataPerMarketIdAndRoundIds" | "userDataPerRoundId" | "userToUnclaimedRounds" | "userUnclaimedRoundsDataPerMarketId" | "userUnclaimedRoundsPerMarketId" | "userUnclaimedRoundsPerMarketIdWithPage"): FunctionFragment;
 
-    getEvent(nameOrSignatureOrTopic: "MarketEnter" | "MarketExit" | "MarketRedeem"): EventFragment;
+    getEvent(nameOrSignatureOrTopic: "MarketEnter" | "MarketExit" | "MarketRedeem" | "RoundResolvedBy"): EventFragment;
 
     encodeFunctionData(functionFragment: 'checkResolutionStatus', values?: undefined): string;
 encodeFunctionData(functionFragment: 'claimFees', values?: undefined): string;
@@ -137,6 +137,18 @@ decodeFunctionResult(functionFragment: 'userUnclaimedRoundsPerMarketIdWithPage',
       export type InputTuple = [MarketId: BigNumberish, RoundId: BigNumberish, User: AddressLike, Result: BigNumberish, AmountOut: BigNumberish];
       export type OutputTuple = [MarketId: bigint, RoundId: bigint, User: string, Result: bigint, AmountOut: bigint];
       export interface OutputObject {MarketId: bigint, RoundId: bigint, User: string, Result: bigint, AmountOut: bigint };
+      export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>
+      export type Filter = TypedDeferredTopicFilter<Event>
+      export type Log = TypedEventLog<Event>
+      export type LogDescription = TypedLogDescription<Event>
+    }
+
+  
+
+    export namespace RoundResolvedByEvent {
+      export type InputTuple = [RoundId: BigNumberish, Resolver: AddressLike, Fees: BigNumberish];
+      export type OutputTuple = [RoundId: bigint, Resolver: string, Fees: bigint];
+      export interface OutputObject {RoundId: bigint, Resolver: string, Fees: bigint };
       export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>
       export type Filter = TypedDeferredTopicFilter<Event>
       export type Log = TypedEventLog<Event>
@@ -627,6 +639,7 @@ getFunction(nameOrSignature: 'userUnclaimedRoundsPerMarketIdWithPage'): TypedCon
     getEvent(key: 'MarketEnter'): TypedContractEvent<MarketEnterEvent.InputTuple, MarketEnterEvent.OutputTuple, MarketEnterEvent.OutputObject>;
 getEvent(key: 'MarketExit'): TypedContractEvent<MarketExitEvent.InputTuple, MarketExitEvent.OutputTuple, MarketExitEvent.OutputObject>;
 getEvent(key: 'MarketRedeem'): TypedContractEvent<MarketRedeemEvent.InputTuple, MarketRedeemEvent.OutputTuple, MarketRedeemEvent.OutputObject>;
+getEvent(key: 'RoundResolvedBy'): TypedContractEvent<RoundResolvedByEvent.InputTuple, RoundResolvedByEvent.OutputTuple, RoundResolvedByEvent.OutputObject>;
 
     filters: {
       
@@ -640,6 +653,10 @@ getEvent(key: 'MarketRedeem'): TypedContractEvent<MarketRedeemEvent.InputTuple, 
 
       'MarketRedeem(uint256,uint256,address,uint256,uint256)': TypedContractEvent<MarketRedeemEvent.InputTuple, MarketRedeemEvent.OutputTuple, MarketRedeemEvent.OutputObject>;
       MarketRedeem: TypedContractEvent<MarketRedeemEvent.InputTuple, MarketRedeemEvent.OutputTuple, MarketRedeemEvent.OutputObject>;
+    
+
+      'RoundResolvedBy(uint256,address,uint256)': TypedContractEvent<RoundResolvedByEvent.InputTuple, RoundResolvedByEvent.OutputTuple, RoundResolvedByEvent.OutputObject>;
+      RoundResolvedBy: TypedContractEvent<RoundResolvedByEvent.InputTuple, RoundResolvedByEvent.OutputTuple, RoundResolvedByEvent.OutputObject>;
     
     };
   }

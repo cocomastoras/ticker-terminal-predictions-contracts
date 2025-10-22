@@ -1127,6 +1127,16 @@ describe("Financial Prediction Markets", function () {
             const [isResolvable2, , ] = await marketMakerAMM.checkResolutionStatus()
             expect(isResolvable2).eq(true)
         }).timeout(1000000000000000)
+        it("Should emit correct event", async function() {
+            const {marketMakerAMM} = await networkHelpers.loadFixture(deployPrecompileAndAMM);
+            const signers = await ethers.getSigners()
+            await marketMakerAMM.enterMarket(0, 1, 1, 1, {value: ethers.parseEther("100")})
+            const [, secondsLeft, currentRoundFees] = await marketMakerAMM.checkResolutionStatus()
+            await networkHelpers.time.increase(secondsLeft + 1n)
+            await expect(marketMakerAMM.connect(signers[1]).resolveMarkets()).emit(marketMakerAMM, "RoundResolvedBy").withArgs(1n, await signers[1].getAddress(), currentRoundFees)
+
+        }).timeout(1000000000000000)
+
     })
     describe('View Functions', function () {
         xit("Should ", async function() {
